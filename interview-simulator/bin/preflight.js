@@ -5,7 +5,9 @@ const { spawnSync } = require('child_process');
 const { readJson, expandHome } = require('../lib/utils');
 
 function hasCommand(cmd) {
-  const res = spawnSync('which', [cmd], { stdio: 'ignore' });
+  // Use 'where' on Windows, 'which' on Unix-like systems
+  const searchCmd = process.platform === 'win32' ? 'where' : 'which';
+  const res = spawnSync(searchCmd, [cmd], { stdio: 'ignore', shell: true });
   return res.status === 0;
 }
 
