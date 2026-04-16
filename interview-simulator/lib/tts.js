@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { execFile } = require('child_process');
+const { execFile, execSync } = require('child_process');
 const say = require('say');
 const { ensureDir, slug } = require('./utils');
 
@@ -27,6 +27,31 @@ function commandExists(cmd) {
   }
 }
 
+function isWindows() {
+  return process.platform === 'win32';
+}
+
+function exportWithPowershellSAPI(text, outPath, config) {
+  return new Promise((resolve, reject) => {
+    try {
+      // Use PowerShell to convert text to speech and save as WAV
+      const psScript = `
+        Add-Type -AssemblyName System.Speech
+        $speak = New-Object System.Speech.Synthesis.SpeechSynthesizer
+        $speak.Rate = ${Number(config.speed || 1)}
+        $speak.SelectVoice($speak.GetInstalledVoices()[0].VoiceInfo.Name)
+        $speak.SetOutputToWaveFile('${outPath.replace(/\\/g, '\\\\')}')
+        $speak.Speak('${text.replace(/'/g, "''")}') 
+        $speak.Dispose()
+      `;
+      execSync(`powershell -NoProfile -Command "${psScript}"`, { stdio: 'pipe' });
+      resolve();
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
 function exportWithEspeak(text, outPath, config) {
   return new Promise((resolve, reject) => {
     const cmd = commandExists('espeak-ng') ? 'espeak-ng' : commandExists('espeak') ? 'espeak' : null;
@@ -51,6 +76,16 @@ async function exportSpeech(text, outPath, ttsConfig) {
   if (provider === 'espeak') {
     await exportWithEspeak(text, outPath, ttsConfig);
     return;
+  }
+
+  // On Windows, try PowerShell SAPI first
+  if (isWindows()) {
+    try {
+      await exportWithPowershellSAPI(text, outPath, ttsConfig);
+      return;
+    } catch (err) {
+      console.warn('PowerShell SAPI failed, falling back to say.js:', err.message);
+    }
   }
 
   try {
