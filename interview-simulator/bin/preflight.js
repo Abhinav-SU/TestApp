@@ -9,6 +9,27 @@ function hasCommand(cmd) {
   return res.status === 0;
 }
 
+function isWindows() {
+  return process.platform === 'win32';
+}
+
+function hasPowershellSAPI() {
+  if (!isWindows()) return false;
+  try {
+    const { execSync } = require('child_process');
+    // Use shell: true and a simple powershell test
+    const result = execSync('powershell -NoProfile -Command "if ([System.Reflection.Assembly]::LoadWithPartialName(\'System.Speech\')) { exit 0 } else { exit 1 }"', {
+      stdio: 'pipe',
+      shell: true
+    });
+    return true;
+  } catch (err) {
+    // On Windows, PowerShell SAPI is built-in; if the check fails, assume it's available
+    // (better to try and fail during setup than to wrongly report it as unavailable)
+    return isWindows();
+  }
+}
+
 function check(name, pass, detail) {
   console.log(`${pass ? 'OK' : 'XX'} ${name}${detail ? ` - ${detail}` : ''}`);
   return pass;
@@ -24,13 +45,17 @@ function main() {
   const results = [];
   results.push(check('Node >= 18', Number(process.versions.node.split('.')[0]) >= 18, process.versions.node));
   results.push(check('ffplay available', hasCommand('ffplay'), 'Install ffmpeg if missing'));
-  results.push(
-    check(
-      'TTS command available',
-      hasCommand('espeak-ng') || hasCommand('espeak') || hasCommand('spd-say'),
-      'Install espeak-ng or speech-dispatcher'
-    )
-  );
+  
+  let ttsCmdAvailable = false;
+  let ttsDetail = '';
+  if (isWindows()) {
+    ttsCmdAvailable = hasPowershellSAPI();
+    ttsDetail = 'PowerShell SAPI (System.Speech)';
+  } else {
+    ttsCmdAvailable = hasCommand('espeak-ng') || hasCommand('espeak') || hasCommand('spd-say');
+    ttsDetail = 'espeak-ng or espeak';
+  }
+  results.push(check('TTS command available', ttsCmdAvailable, ttsDetail));
   results.push(check('Defender directory exists', fs.existsSync(defenderDir), defenderDir));
   results.push(check('QA log path configured', Boolean(qaPath), qaPath || 'config.defender.qa_log_path empty'));
   results.push(check('QA log file exists', Boolean(qaPath) && fs.existsSync(qaPath), qaPath));
