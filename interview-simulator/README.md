@@ -14,6 +14,8 @@ A standalone Node.js app that simulates interviewer audio, waits for Defender an
    npm run run:dry
 5. Run automated tests:
    npm test
+6. Check live-mode readiness:
+   npm run preflight
 
 ## Run Modes
 
@@ -40,3 +42,12 @@ CLI options:
 - Ensure Defender audio capture is active before running.
 - On Linux, install ffmpeg if ffplay is missing.
 - Update config.json defender.qa_log_path to your local Defender log path.
+
+## Live Test Checklist
+
+1. Defender repo is available and starts (`npm start`) in a separate terminal.
+2. Defender screen share/system audio capture is active.
+3. QA log file exists at configured path.
+4. Audio cache generated (`npm run setup`).
+5. Run scenario in live mode:
+   node bin/run.js scenarios/full-interview.json --qa-log <path-to-session-qa.jsonl> --defender-log <path-to-defender.log>

@@ -9,6 +9,7 @@
     "run": "node bin/run.js scenarios/full-interview.json",
     "run:dry": "node bin/run.js scenarios/classifier-only.json --dry-run --no-semantic",
     "compare": "node bin/compare.js",
+    "preflight": "node bin/preflight.js",
     "start-with-defender": "bash scripts/start-with-defender.sh scenarios/full-interview.json",
     "test": "node --test"
   },
