@@ -1,6 +1,10 @@
 const { execSync } = require('child_process');
 const os = require('os');
 
+function psSingleQuote(value) {
+  return String(value).replace(/'/g, "''");
+}
+
 function resolveCommand(explicitPlayer) {
   if (explicitPlayer && explicitPlayer !== 'auto') {
     if (explicitPlayer === 'ffplay') {
@@ -10,14 +14,20 @@ function resolveCommand(explicitPlayer) {
       return (wavPath) => `afplay "${wavPath}"`;
     }
     if (explicitPlayer === 'powershell') {
-      return (wavPath) => `powershell -c "(New-Object Media.SoundPlayer '${wavPath}').PlaySync();"`;
+      return (wavPath) => {
+        const safe = psSingleQuote(wavPath);
+        return `powershell -NoProfile -Command "try { $p = New-Object System.Media.SoundPlayer('${safe}'); $p.Load(); $p.PlaySync(); } catch { Write-Error $_; exit 1 }"`;
+      };
     }
   }
 
   const platform = os.platform();
   if (platform === 'darwin') return (wavPath) => `afplay "${wavPath}"`;
   if (platform === 'win32') {
-    return (wavPath) => `powershell -c "(New-Object Media.SoundPlayer '${wavPath}').PlaySync();"`;
+    return (wavPath) => {
+      const safe = psSingleQuote(wavPath);
+      return `powershell -NoProfile -Command "try { $p = New-Object System.Media.SoundPlayer('${safe}'); $p.Load(); $p.PlaySync(); } catch { Write-Error $_; exit 1 }"`;
+    };
   }
   return (wavPath) => `ffplay -nodisp -autoexit -loglevel error "${wavPath}"`;
 }
