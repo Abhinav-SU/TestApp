@@ -1,0 +1,30 @@
+{
+  "tts": {
+    "provider": "say.js",
+    "voice": null,
+    "speed": 1,
+    "cache_dir": "./audio-cache"
+  },
+  "defender": {
+    "qa_log_path": "C:\\Users\\abhin\\AppData\\Roaming\\defender-host\\session-qa.jsonl",
+    "project_path": "D:\\03_Projects\\OA_Coder_Main",
+    "log_path": null,
+    "test_port": null,
+    "startup_wait_sec": 5
+  },
+  "playback": {
+    "player": "auto",
+    "between_questions_sec": 3,
+    "post_answer_wait_sec": 2
+  },
+  "evaluation": {
+    "gemini_key_env": "GEMINI_API_KEY",
+    "run_semantic_checks": true,
+    "semantic_model": "gemini-2.5-flash-lite"
+  },
+  "reporting": {
+    "output_dir": "./reports",
+    "console_verbose": true,
+    "generate_markdown": true
+  }
+}

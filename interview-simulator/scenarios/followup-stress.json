@@ -1,0 +1,61 @@
+{
+  "interview": {
+    "name": "Follow-up Stress",
+    "pre_delay_sec": 2,
+    "between_questions_sec": 1
+  },
+  "acts": [
+    {
+      "id": "act-followups",
+      "name": "Follow-up Chains",
+      "questions": [
+        {
+          "id": "f1",
+          "text": "Tell me about a complex migration you led",
+          "type": "behavioral",
+          "wait_for_answer_sec": 30,
+          "expected": { "mode": "behavioral", "intent": "new_question", "answer_should_use_story": true }
+        },
+        {
+          "id": "f2",
+          "text": "What specifically made that difficult?",
+          "type": "followup",
+          "delay_after_prev_sec": 1,
+          "wait_for_answer_sec": 20,
+          "expected": { "mode": "behavioral", "intent": "followup", "should_reference_previous": true }
+        },
+        {
+          "id": "f3",
+          "text": "How did you de-risk rollout?",
+          "type": "followup",
+          "delay_after_prev_sec": 1,
+          "wait_for_answer_sec": 20,
+          "expected": { "mode": "behavioral", "intent": "followup", "should_reference_previous": true }
+        },
+        {
+          "id": "f4",
+          "text": "If you had to do it again, what would you change?",
+          "type": "followup",
+          "delay_after_prev_sec": 1,
+          "wait_for_answer_sec": 20,
+          "expected": { "mode": "behavioral", "intent": "followup" }
+        },
+        {
+          "id": "f5",
+          "text": "Now design a scalable URL shortener",
+          "type": "hld",
+          "wait_for_answer_sec": 50,
+          "expected": { "mode": "hld", "intent": "new_question", "answer_must_contain": ["architecture"] }
+        },
+        {
+          "id": "f6",
+          "text": "How will you shard the keyspace?",
+          "type": "followup",
+          "delay_after_prev_sec": 1,
+          "wait_for_answer_sec": 20,
+          "expected": { "mode": "hld", "intent": "followup" }
+        }
+      ]
+    }
+  ]
+}

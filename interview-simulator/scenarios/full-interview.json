@@ -1,0 +1,198 @@
+{
+  "interview": {
+    "name": "Full Pipeline Test - Senior Backend",
+    "total_time_budget_min": 45,
+    "pre_delay_sec": 5,
+    "between_questions_sec": 3
+  },
+  "acts": [
+    {
+      "id": "act-1-intro",
+      "name": "Introduction",
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Hi, thanks for joining. Can you tell me about yourself?",
+          "type": "intro",
+          "wait_for_answer_sec": 30,
+          "expected": {
+            "mode": "intro",
+            "intent": "new_question",
+            "answer_must_contain": ["experience", "years"],
+            "answer_must_not_contain": ["class Solution", "```python"],
+            "max_answer_words": 300,
+            "min_answer_words": 50
+          }
+        }
+      ]
+    },
+    {
+      "id": "act-2-behavioral",
+      "name": "Behavioral Round",
+      "questions": [
+        {
+          "id": "q2",
+          "text": "Tell me about a time you had to lead a team through a difficult project",
+          "type": "behavioral",
+          "wait_for_answer_sec": 30,
+          "expected": {
+            "mode": "behavioral",
+            "intent": "new_question",
+            "answer_should_use_story": true,
+            "answer_must_not_contain": ["```"]
+          }
+        },
+        {
+          "id": "q3",
+          "text": "Can you elaborate on the technical challenges?",
+          "type": "followup",
+          "delay_after_prev_sec": 2,
+          "wait_for_answer_sec": 25,
+          "expected": {
+            "intent": "followup",
+            "mode": "behavioral",
+            "should_reference_previous": true
+          }
+        },
+        {
+          "id": "q4",
+          "text": "mm-hmm",
+          "type": "noise",
+          "delay_after_prev_sec": 1,
+          "wait_for_answer_sec": 8,
+          "expected": {
+            "should_answer": false,
+            "dropped_reason": "backchannel"
+          }
+        }
+      ]
+    },
+    {
+      "id": "act-3-dsa",
+      "name": "DSA Round",
+      "questions": [
+        {
+          "id": "q5",
+          "text": "Given an array of integers, return indices of the two numbers that add up to a target",
+          "type": "dsa",
+          "wait_for_answer_sec": 45,
+          "expected": {
+            "mode": "dsa",
+            "intent": "new_question",
+            "answer_has_part2": true,
+            "part2_must_contain": ["class Solution", "def "],
+            "answer_must_contain": ["complexity", "O("]
+          }
+        },
+        {
+          "id": "q6",
+          "text": "What's the time complexity?",
+          "type": "followup",
+          "delay_after_prev_sec": 2,
+          "wait_for_answer_sec": 15,
+          "expected": {
+            "intent": "followup",
+            "mode": "dsa"
+          }
+        }
+      ]
+    },
+    {
+      "id": "act-4-hld",
+      "name": "System Design Round",
+      "questions": [
+        {
+          "id": "q7",
+          "text": "Design a URL shortener like bit.ly",
+          "type": "hld",
+          "wait_for_answer_sec": 60,
+          "expected": {
+            "mode": "hld",
+            "intent": "new_question",
+            "answer_has_part2": true,
+            "answer_must_contain": ["requirements", "API", "architecture"]
+          }
+        },
+        {
+          "id": "q8",
+          "text": "What about scaling?",
+          "type": "followup",
+          "delay_after_prev_sec": 3,
+          "wait_for_answer_sec": 20,
+          "expected": {
+            "intent": "followup",
+            "mode": "hld"
+          }
+        }
+      ]
+    },
+    {
+      "id": "act-5-technical",
+      "name": "Technical Knowledge",
+      "questions": [
+        {
+          "id": "q9",
+          "text": "What is the CAP theorem",
+          "type": "technical",
+          "wait_for_answer_sec": 20,
+          "expected": {
+            "mode": "technical",
+            "answer_must_contain": ["consistency", "availability", "partition"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "act-6-lld",
+      "name": "LLD Round",
+      "questions": [
+        {
+          "id": "q10",
+          "text": "Design a parking lot system with different vehicle types",
+          "type": "lld",
+          "wait_for_answer_sec": 45,
+          "expected": {
+            "mode": "lld",
+            "answer_has_part2": true,
+            "part2_must_contain": ["class "]
+          }
+        }
+      ]
+    },
+    {
+      "id": "act-7-edge-cases",
+      "name": "Edge Cases",
+      "questions": [
+        {
+          "id": "q11",
+          "text": "okay cool",
+          "type": "noise",
+          "wait_for_answer_sec": 8,
+          "expected": {
+            "should_answer": false
+          }
+        },
+        {
+          "id": "q12",
+          "text": "right right",
+          "type": "noise",
+          "wait_for_answer_sec": 8,
+          "expected": {
+            "should_answer": false
+          }
+        },
+        {
+          "id": "q13",
+          "text": "Tell me about a time you dealt with ambiguity",
+          "type": "behavioral",
+          "wait_for_answer_sec": 30,
+          "expected": {
+            "mode": "behavioral",
+            "story_different_from": "q2",
+            "answer_should_use_story": true
+          }
+        }
+      ]
+    }
+  ]
+}

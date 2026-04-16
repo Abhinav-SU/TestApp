@@ -1,0 +1,36 @@
+{
+  "interview": {
+    "name": "ASR Recovery",
+    "pre_delay_sec": 1,
+    "between_questions_sec": 2
+  },
+  "acts": [
+    {
+      "id": "act-asr",
+      "name": "Garbled and Partial Inputs",
+      "questions": [
+        {
+          "id": "a1",
+          "text": "Given an aray of integurs return two sum indices",
+          "type": "dsa",
+          "wait_for_answer_sec": 35,
+          "expected": { "mode": "dsa", "answer_must_contain": ["complexity"] }
+        },
+        {
+          "id": "a2",
+          "text": "tell me bout your self",
+          "type": "intro",
+          "wait_for_answer_sec": 20,
+          "expected": { "mode": "intro", "answer_must_contain": ["experience"] }
+        },
+        {
+          "id": "a3",
+          "text": "desine a url shortner",
+          "type": "hld",
+          "wait_for_answer_sec": 40,
+          "expected": { "mode": "hld", "answer_must_contain": ["API", "architecture"] }
+        }
+      ]
+    }
+  ]
+}

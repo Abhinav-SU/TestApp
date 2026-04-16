@@ -1,0 +1,43 @@
+{
+  "interview": {
+    "name": "Story Rotation",
+    "pre_delay_sec": 1,
+    "between_questions_sec": 2
+  },
+  "acts": [
+    {
+      "id": "act-story-rotation",
+      "name": "Behavioral Variety",
+      "questions": [
+        {
+          "id": "s1",
+          "text": "Tell me about a time you handled a production incident",
+          "type": "behavioral",
+          "wait_for_answer_sec": 30,
+          "expected": { "mode": "behavioral", "answer_should_use_story": true }
+        },
+        {
+          "id": "s2",
+          "text": "Tell me about a time you influenced without authority",
+          "type": "behavioral",
+          "wait_for_answer_sec": 30,
+          "expected": { "mode": "behavioral", "answer_should_use_story": true, "story_different_from": "s1" }
+        },
+        {
+          "id": "s3",
+          "text": "Tell me about a time you dealt with ambiguity",
+          "type": "behavioral",
+          "wait_for_answer_sec": 30,
+          "expected": { "mode": "behavioral", "answer_should_use_story": true, "story_different_from": "s2" }
+        },
+        {
+          "id": "s4",
+          "text": "Tell me about a time you had to mentor a teammate",
+          "type": "behavioral",
+          "wait_for_answer_sec": 30,
+          "expected": { "mode": "behavioral", "answer_should_use_story": true, "story_different_from": "s3" }
+        }
+      ]
+    }
+  ]
+}
