@@ -1,0 +1,50 @@
+{
+  "interview": {
+    "name": "Noise Filtering",
+    "pre_delay_sec": 1,
+    "between_questions_sec": 1
+  },
+  "acts": [
+    {
+      "id": "act-noise",
+      "name": "Backchannel and Noise",
+      "questions": [
+        {
+          "id": "n1",
+          "text": "uh-huh",
+          "type": "noise",
+          "wait_for_answer_sec": 6,
+          "expected": { "should_answer": false }
+        },
+        {
+          "id": "n2",
+          "text": "right right",
+          "type": "noise",
+          "wait_for_answer_sec": 6,
+          "expected": { "should_answer": false }
+        },
+        {
+          "id": "n3",
+          "text": "okay cool",
+          "type": "noise",
+          "wait_for_answer_sec": 6,
+          "expected": { "should_answer": false }
+        },
+        {
+          "id": "n4",
+          "text": "Tell me about your most impactful project",
+          "type": "behavioral",
+          "wait_for_answer_sec": 25,
+          "expected": { "mode": "behavioral", "intent": "new_question", "answer_should_use_story": true }
+        },
+        {
+          "id": "n5",
+          "text": "mm-hmm",
+          "type": "noise",
+          "wait_for_answer_sec": 6,
+          "expected": { "should_answer": false }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "interview": {
+    "name": "Classifier Only",
+    "pre_delay_sec": 2,
+    "between_questions_sec": 2
+  },
+  "acts": [
+    {
+      "id": "act-classifier",
+      "name": "Mode Detection",
+      "questions": [
+        {
+          "id": "c1",
+          "text": "Can you introduce yourself in brief?",
+          "type": "intro",
+          "wait_for_answer_sec": 20,
+          "expected": { "mode": "intro" }
+        },
+        {
+          "id": "c2",
+          "text": "Tell me about a time you handled conflict",
+          "type": "behavioral",
+          "wait_for_answer_sec": 25,
+          "expected": { "mode": "behavioral", "answer_should_use_story": true }
+        },
+        {
+          "id": "c3",
+          "text": "Solve two sum and share complexity",
+          "type": "dsa",
+          "wait_for_answer_sec": 35,
+          "expected": { "mode": "dsa", "answer_must_contain": ["complexity"] }
+        },
+        {
+          "id": "c4",
+          "text": "Design a URL shortener",
+          "type": "hld",
+          "wait_for_answer_sec": 40,
+          "expected": { "mode": "hld" }
+        },
+        {
+          "id": "c5",
+          "text": "Explain CAP theorem",
+          "type": "technical",
+          "wait_for_answer_sec": 20,
+          "expected": { "mode": "technical" }
+        },
+        {
+          "id": "c6",
+          "text": "Design parking lot with classes",
+          "type": "lld",
+          "wait_for_answer_sec": 35,
+          "expected": { "mode": "lld" }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+node_modules/
+audio-cache/*.wav
+reports/*.json
+reports/*.md
+*.log

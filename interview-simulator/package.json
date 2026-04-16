@@ -1,0 +1,25 @@
+{
+  "name": "interview-simulator",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Standalone interview simulator test harness for Defender",
+  "main": "bin/run.js",
+  "scripts": {
+    "setup": "node bin/setup.js",
+    "run": "node bin/run.js scenarios/full-interview.json",
+    "run:dry": "node bin/run.js scenarios/classifier-only.json --dry-run --no-semantic",
+    "compare": "node bin/compare.js",
+    "start-with-defender": "bash scripts/start-with-defender.sh scenarios/full-interview.json",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "chokidar": "^3.6.0",
+    "say": "^0.16.0"
+  },
+  "optionalDependencies": {
+    "@google-cloud/text-to-speech": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

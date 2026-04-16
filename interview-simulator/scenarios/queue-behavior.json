@@ -1,0 +1,46 @@
+{
+  "interview": {
+    "name": "Queue Behavior",
+    "pre_delay_sec": 1,
+    "between_questions_sec": 1
+  },
+  "acts": [
+    {
+      "id": "act-queue",
+      "name": "Rapid Fire",
+      "questions": [
+        {
+          "id": "qb1",
+          "text": "What is CAP theorem?",
+          "type": "technical",
+          "wait_for_answer_sec": 20,
+          "expected": { "mode": "technical", "answer_must_contain": ["consistency"] }
+        },
+        {
+          "id": "qb2",
+          "text": "What is CAP theorem?",
+          "type": "technical",
+          "delay_after_prev_sec": 0,
+          "wait_for_answer_sec": 20,
+          "expected": { "mode": "technical" }
+        },
+        {
+          "id": "qb3",
+          "text": "Given two sum, explain optimal complexity",
+          "type": "dsa",
+          "delay_after_prev_sec": 0,
+          "wait_for_answer_sec": 35,
+          "expected": { "mode": "dsa", "answer_must_contain": ["O("] }
+        },
+        {
+          "id": "qb4",
+          "text": "What if input has duplicates?",
+          "type": "followup",
+          "delay_after_prev_sec": 1,
+          "wait_for_answer_sec": 15,
+          "expected": { "mode": "dsa", "intent": "followup" }
+        }
+      ]
+    }
+  ]
+}
