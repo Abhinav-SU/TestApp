@@ -7,6 +7,7 @@ function parseArgs(argv) {
   const args = {
     scenario: null,
     dryRun: false,
+    noAudio: false,
     qaLogPath: null,
     defenderLogPath: null,
     noSemantic: false
@@ -23,6 +24,7 @@ function parseArgs(argv) {
     }
 
     if (token === '--dry-run') args.dryRun = true;
+    else if (token === '--no-audio') args.noAudio = true;
     else if (token === '--no-semantic') args.noSemantic = true;
     else if (token === '--qa-log') args.qaLogPath = input.shift() || null;
     else if (token === '--defender-log') args.defenderLogPath = input.shift() || null;
@@ -51,6 +53,7 @@ async function main() {
     config,
     options: {
       dryRun: parsed.dryRun,
+      noAudio: parsed.noAudio,
       qaLogPath: parsed.qaLogPath,
       defenderLogPath: parsed.defenderLogPath
     }

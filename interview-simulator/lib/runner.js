@@ -49,6 +49,8 @@ async function runScenario({ scenario, scenarioPath, config, options = {} }) {
   );
   const preDelaySec = Number(scenario?.interview?.pre_delay_sec ?? 0);
   const audioDir = path.resolve(path.dirname(scenarioPath), '..', config.tts.cache_dir);
+  const noAudio = Boolean(options.noAudio || config?.playback?.no_audio);
+  const strictAudio = Boolean(config?.playback?.strict_audio);
 
   let watcher = null;
   if (!dryRun) {
@@ -73,23 +75,16 @@ async function runScenario({ scenario, scenarioPath, config, options = {} }) {
       const wavPath = getAudioPath(q, audioDir);
       let answer = null;
       let timedOut = false;
+      let audioPlaybackError = null;
       const questionStart = Date.now();
 
-      if (!dryRun) {
+      if (!dryRun && !noAudio) {
         try {
           playAudio(wavPath, { player: config.playback?.player || 'auto' });
         } catch (err) {
-          const failResult = {
-            actId: act.id,
-            questionId: q.id,
-            questionText: q.text,
-            pass: false,
-            checks: [{ check: 'audio_playback', pass: false, detail: String(err.message || err) }],
-            metrics: { latencyMs: 0, wordCount: 0 }
-          };
-          allResults.push(failResult);
-          printQuestionResult(failResult);
-          continue;
+          audioPlaybackError = String(err && err.message ? err.message : err);
+          // Degrade gracefully so live runs still validate watcher/evaluator behavior.
+          console.warn(`WARN audio playback failed for ${q.id}; continuing without audio. detail=${audioPlaybackError}`);
         }
       }
 
@@ -122,6 +117,12 @@ async function runScenario({ scenario, scenarioPath, config, options = {} }) {
         : [];
 
       const checks = [
+        ...(noAudio
+          ? [{ check: 'audio_playback_skipped', pass: true, detail: 'disabled via --no-audio or config.playback.no_audio' }]
+          : []),
+        ...(audioPlaybackError
+          ? [{ check: 'audio_playback', pass: !strictAudio, detail: audioPlaybackError }]
+          : []),
         ...(timedOut ? [{ check: 'timeout', pass: false, detail: `${timeoutMs}ms` }] : []),
         ...deterministic.checks,
         ...semantic
