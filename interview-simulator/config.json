@@ -6,7 +6,8 @@
     "cache_dir": "./audio-cache"
   },
   "defender": {
-    "qa_log_path": "~/.config/defender/session-qa.jsonl",
+    "qa_log_path": "C:\\Users\\abhin\\AppData\\Roaming\\defender-host\\session-qa.jsonl",
+    "project_path": "D:\\03_Projects\\OA_Coder_Main",
     "log_path": null,
     "test_port": null,
     "startup_wait_sec": 5
