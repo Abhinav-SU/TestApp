@@ -28,7 +28,8 @@ class AnswerWatcher {
     }
   }
 
-  waitForAnswer(questionText, timeoutMs = 60000) {
+  waitForAnswer(questionText, timeoutMs = 60000, options = {}) {
+    const minTsMs = Number(options.minTsMs || 0);
     return new Promise((resolve, reject) => {
       const key = `${Date.now()}-${Math.random()}`;
       const timeout = setTimeout(() => {
@@ -38,6 +39,7 @@ class AnswerWatcher {
 
       this.pending.set(key, {
         questionText,
+        minTsMs,
         resolve: (entry) => {
           clearTimeout(timeout);
           resolve(entry);
@@ -45,7 +47,7 @@ class AnswerWatcher {
       });
 
       for (const entry of this.recentEntries) {
-        if (this._isMatch(entry, questionText)) {
+        if (this._isMatch(entry, questionText, minTsMs)) {
           this.pending.delete(key);
           clearTimeout(timeout);
           resolve(entry);
@@ -55,11 +57,12 @@ class AnswerWatcher {
     });
   }
 
-  waitForSilence(timeoutMs = 8000) {
+  waitForSilence(timeoutMs = 8000, options = {}) {
+    const minTsMs = Number(options.minTsMs || 0);
     return new Promise((resolve) => {
-      const before = this.recentEntries.length;
+      const before = this.recentEntries.filter((entry) => this._isNewEnough(entry, minTsMs)).length;
       setTimeout(() => {
-        const after = this.recentEntries.length;
+        const after = this.recentEntries.filter((entry) => this._isNewEnough(entry, minTsMs)).length;
         resolve({ answered: after > before, newEntries: Math.max(0, after - before) });
       }, timeoutMs);
     });
@@ -92,11 +95,14 @@ class AnswerWatcher {
         return;
       }
 
+      // Track local ingest time as fallback when entry.ts is absent.
+      entry.__arrivedAtMs = Date.now();
+
       this.recentEntries.push(entry);
       if (this.recentEntries.length > 200) this.recentEntries.shift();
 
       for (const [key, p] of this.pending.entries()) {
-        if (this._isMatch(entry, p.questionText)) {
+        if (this._isMatch(entry, p.questionText, p.minTsMs || 0)) {
           this.pending.delete(key);
           p.resolve(entry);
         }
@@ -104,7 +110,24 @@ class AnswerWatcher {
     });
   }
 
-  _isMatch(entry, questionText) {
+  _entryTsMs(entry) {
+    if (!entry || typeof entry !== 'object') return 0;
+    const raw = entry.ts || entry.timestamp || entry.time || null;
+    if (raw) {
+      const parsed = Date.parse(String(raw));
+      if (Number.isFinite(parsed)) return parsed;
+    }
+    return Number(entry.__arrivedAtMs || 0);
+  }
+
+  _isNewEnough(entry, minTsMs) {
+    if (!minTsMs) return true;
+    return this._entryTsMs(entry) >= minTsMs;
+  }
+
+  _isMatch(entry, questionText, minTsMs = 0) {
+    if (!this._isNewEnough(entry, minTsMs)) return false;
+
     const source = normalizeText(entry.question || entry.prompt || '');
     const target = normalizeText(questionText);
     if (!source || !target) return false;

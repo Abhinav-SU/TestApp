@@ -94,16 +94,18 @@ async function runScenario({ scenario, scenarioPath, config, options = {} }) {
       }
 
       const timeoutMs = Number((q.wait_for_answer_sec || 30) * 1000);
+      // Ignore stale QA log entries by only accepting entries created after this question starts.
+      const minEntryTsMs = Date.now() - 1000;
 
       try {
         if (dryRun) {
           answer = buildDryRunAnswer(q);
         } else {
           if (q.expected?.should_answer === false || q.type === 'noise') {
-            const silence = await watcher.waitForSilence(timeoutMs);
+            const silence = await watcher.waitForSilence(timeoutMs, { minTsMs: minEntryTsMs });
             answer = silence.answered ? { text: 'unexpected_answer_detected' } : { text: '' };
           } else {
-            answer = await watcher.waitForAnswer(q.text, timeoutMs);
+            answer = await watcher.waitForAnswer(q.text, timeoutMs, { minTsMs: minEntryTsMs });
           }
         }
       } catch (_) {
