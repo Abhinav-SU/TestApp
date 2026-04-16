@@ -1,0 +1,75 @@
+# Quick Start Checklist
+
+Copy-paste this into a text editor and check off as you go.
+
+```
+SETUP PHASE (5 min)
+==================
+□ Pull latest: git checkout feature/interview-simulator-harness && git pull
+□ Install: npm install
+□ Verify: npm run preflight
+  Expected: All OK (6 lines, no XX)
+
+
+AUDIO GENERATION (2-3 min)
+==========================
+□ Generate audio: npm run setup
+  Expected: 100+ .wav files created in audio-cache/
+  Action if failed: Check PowerShell SAPI, ffmpeg on PATH
+
+
+DEFENDER READY (3-5 min, TERMINAL 1)
+=====================================
+□ Terminal 1 open for full duration
+□ cd D:\03_Projects\OA_Coder_Main
+□ npm start
+  Expected: "Recording: YES" or "Ready"
+  Action if failed: Check audio capture, permissions, port 3000 free
+
+
+DRY RUN TEST (30 sec, TERMINAL 2)
+==================================
+□ npm run run:dry
+  Expected: 6/6 PASS, ~14s duration
+  Action if failed: Something broken in code (shouldn't happen)
+
+
+LIVE TEST (10-30 min, TERMINAL 2)
+==================================
+□ node bin/run.js scenarios/classifier-only.json
+  Expected: 6 questions, each waits 60s for your answer
+  Procedure per question:
+    1. Audio plays from speaker (30s)
+    2. Simulator waits for QA log entry (60s timeout)
+    3. SPEAK YOUR ANSWER CLEARLY when prompted
+    4. Check result: PASS or XX
+  Expected final: 6/6 PASS
+
+
+REVIEW RESULTS (5 min)
+======================
+□ Check reports/ directory for run-YYYY-MM-DD-HHMMSS.json
+□ Check run-YYYY-MM-DD-HHMMSS.md for human-readable format
+□ Verify pass_rate: 100
+
+
+TROUBLESHOOTING
+===============
+If dry-run passes but live test fails:
+  □ npm run preflight (check TTS, ffplay, QA log path)
+  □ Check Defender is running (Terminal 1 still has output)
+  □ Manually check QA log: cat reports/ then look in Windows explorer
+  □ Try one more live question, speak louder
+
+If audio cache generation fails:
+  □ Check PowerShell: powershell -NoProfile -Command "Write-Host OK"
+  □ Check ffmpeg: ffplay -version
+  □ Delete audio-cache/ and retry: npm run setup
+
+If Defender won't start:
+  □ Check port 3000 not in use: netstat -an | find "3000"
+  □ Check .env exists at D:\03_Projects\OA_Coder_Main\.env
+  □ Check GEMINI_API_KEY is set: echo %GEMINI_API_KEY%
+```
+
+Print or bookmark WINDOWS_LIVE_TEST.md in the repo for detailed instructions.
