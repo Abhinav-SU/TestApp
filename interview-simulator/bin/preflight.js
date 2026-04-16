@@ -46,7 +46,12 @@ function main() {
 
   const results = [];
   results.push(check('Node >= 18', Number(process.versions.node.split('.')[0]) >= 18, process.versions.node));
-  results.push(check('ffplay available', hasCommand('ffplay'), 'Install ffmpeg if missing'));
+  
+  // On Windows, audio playback uses PowerShell Media.SoundPlayer (built-in), not ffplay
+  // On Linux/macOS, ffplay is required
+  let ffplayRequired = !isWindows();
+  let ffplayDetail = isWindows() ? 'Using PowerShell Media.SoundPlayer (built-in)' : 'Install ffmpeg if missing';
+  results.push(check('Audio playback', !ffplayRequired || hasCommand('ffplay'), ffplayDetail));
   
   let ttsCmdAvailable = false;
   let ttsDetail = '';
